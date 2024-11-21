@@ -1,0 +1,21 @@
+name: Lint Web Template
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - template/apps/web/**
+      - template/packages/**
+  workflow_dispatch:
+
+permissions:
+  checks: write
+  contents: write
+
+jobs:
+  lint:
+    uses: ./.github/workflows/linter.template.yml
+    with:
+      component: template/web
+      dir: template/apps/web

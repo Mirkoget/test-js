@@ -1,0 +1,251 @@
+.shopContainer {
+    display: flex;
+    flex-direction: column;
+    font-family: 'AwanZaman', Arial, sans-serif;
+}
+
+.contentWrapper {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    font-family: 'AwanZaman', Arial, sans-serif;
+}
+
+.sidebar {
+    width: 20%;
+    min-width: 200px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 15px;
+    height: auto;
+    max-height: 16vh;
+}
+
+.filterSection {
+    margin-top: 5px;
+    font-family: 'AwanZaman', Arial, sans-serif;
+}
+
+.priceRange {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.priceRange input {
+    width: 100%;
+    max-width: 150px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.priceContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 85%;
+    margin-top: 10px;
+    padding: 0 25px;
+    position: relative;
+    top: -20px;
+}
+
+.productCard h3 {
+    text-align: left;
+    padding-left: 22px;
+    font-size: 24px;
+    margin-bottom: 0;
+    position: relative;
+    top: -20px;
+}
+
+.priceLabel {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+}
+
+.filtersHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filtersHeader button{
+    background: none;
+    border: none;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 15px;
+    cursor: pointer;
+    font-family: 'AwanZaman', Arial, sans-serif;
+    padding: 5px;
+}
+
+.productList {
+    width: 80%;
+    padding: 20px;
+}
+
+.searchAndSort {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.searchBar {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.searchInput {
+    width: 98%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    font-family: 'AwanZaman', Arial, sans-serif;
+}
+
+.searchInput:focus {
+    border-color: #007bff;
+}
+
+.sortOptions {
+    padding: 5px;
+}
+
+.resultsInfo {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.productsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    flex-grow: 1;
+}
+
+.productCard {
+    border: 1px solid #ddd;
+    padding: 0;
+    border-radius: 11px;
+    text-align: center;
+    font-family: 'AwanZaman', Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.productImage {
+    width: 398px;
+    height: 220px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.addToCart {
+    margin-bottom: 10px;
+    padding: 10px 20px;
+    width: 338px;
+    height: 35px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 9px;
+    margin-right: 7px;
+    cursor: pointer;
+    font-family: 'AwanZaman', Arial, sans-serif;
+    font-size: 16px;
+    position: relative;
+    top: -5px;
+}
+
+.addToCart:hover {
+    background-color: #0056b3;
+}
+
+.pagination {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1000;
+    font-family: 'AwanZaman', Arial, sans-serif;
+}
+
+.pagination button {
+    padding: 8px 16px;
+    margin: 0 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'AwanZaman', Arial, sans-serif;
+}
+
+.pagination button:hover {
+    background-color: #ddd;
+}
+
+.pagination span {
+    font-size: 16px;
+    margin: 0 10px;
+}
+
+.resultsAndSort {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-family: 'AwanZaman', Arial, sans-serif;
+}
+
+.activeFilter {
+    background-color: #eee;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: fit-content;
+}
+
+.activeFilter button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 16px;
+    margin-left: 10px;
+    font-family: 'AwanZaman', Arial, sans-serif;
+}
+
+.removeFilter {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: 'AwanZaman', Arial, sans-serif;
+}
+
+.activeTab {
+    background-color: #e0e0e0;
+    border-radius: 10px;
+}

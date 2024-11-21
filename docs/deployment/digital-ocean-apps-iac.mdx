@@ -1,0 +1,328 @@
+---
+title: "Digital Ocean Apps (IaC)"
+---
+
+There is a simplified deployment type without Kubernetes. This type is **recommended** for most new applications because it allows you to set up infrastructure faster and doesn't require additional DevOps knowledge from the development team. You can switch to a more complex Kubernetes solution when your application will be at scale.
+
+It's a step-by-step Ship deployment guide. We will use the [Digital Ocean Apps](https://www.digitalocean.com/products/app-platform) and [GitHub Actions](https://github.com/features/actions) for automated deployment. [Mongo Atlas](https://www.mongodb.com/) and [Redis Cloud](https://redis.com/try-free/) for databases deployment, [Cloudflare](https://www.cloudflare.com/) for DNS and SSL configuration and [Pulumi](https://www.pulumi.com/) for Infrastructure as Code
+
+You need to create [GitHub](https://github.com/), [Digital Ocean](https://www.digitalocean.com/), [CloudFlare](https://www.cloudflare.com/), [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register) and [Redis Cloud](https://redis.com/try-free/) accounts.
+
+Also, you need [git](https://git-scm.com/) and [Node.js](https://nodejs.org/en/) if you already haven't.
+
+
+## Setup project
+
+First, initialize your project. Type ```npx create-ship-app init``` in the terminal then choose desired build type and **Digital Ocean Apps** as a cloud service provider.
+
+![Init project](/images/init-project.png)
+
+You will have the next project structure.
+
+```shell
+/my-app
+  /deploy
+  /apps
+    /web
+    /api
+  /.github
+  ...
+```
+
+Create GitHub private repository and upload source code.
+
+![Private repo](/images/private-repo.png)
+
+
+```shell
+cd my-app
+git remote add origin https://github.com/Oigen43/my-app.git
+git branch -M main
+git push -u origin main
+```
+
+## MongoDB Atlas
+
+Navigate to [MongoDB Atlas](https://cloud.mongodb.com/), sign in to your account and create a new database.
+
+### Database creation
+
+1. Select the appropriate type. Dedicated for a production environment, shared for staging/demo.
+2. Select provider and region. We recommend selecting the same or closest region to the DO application.
+3. Select cluster tier. Free M0 Sandbox should be enough for staging/demo environments. For production environment we recommended selecting the option that supports cloud backups, M10 or higher.
+4. Enter cluster name
+
+![Mongo cluster](/images/mongo-create.png)
+
+### Security and connection
+
+After cluster creation, you'll need to set up security. Select the authentication type (username and password) and create a user.
+
+![Mongo setup authentication](/images/mongo-create-password.png)
+
+Add IP addresses list, which should have access to your cluster. Add 0.0.0.0/0 IP address to allow anyone with credentials to connect.
+
+![Mongo setup ip white list](/images/mongo-create-ip-list.png)
+
+After database creation, go to the dashboard page and get the URI connection string by pressing the `connect` button.
+
+![Mongo dashboard](/images/mongo-dashboard.png)
+
+Select `Connect your application` option. Choose driver and mongo version, and copy connection string. Don't forget to replace `<password>` with your credentials.
+
+![Mongo connect dialog](/images/mongo-connection-string.png)
+
+Save this value. It will be needed later when creating the app in Digital Ocean.
+
+<Tip>
+Before moving to production, it's crucial to set up [MongoDB backup methods](https://www.mongodb.com/docs/manual/core/backups).
+
+This ensures that you can reliably restore your data in the event of unforeseen circumstances.
+</Tip>
+
+## Redis Cloud
+
+Navigate to [Redis Cloud](https://redis.com/try-free/) and create an account. Select cloud provider and region, then press `Let's start free` to finish database creation.
+
+![Redis create database](/images/redis-creation.png)
+
+
+Open database settings and get the database public endpoint and password.
+
+![Redis public endpoint](/images/redis-public-endpoint.png)
+![Redis password](/images/redis-password.png)
+
+Form Redis connection string using public endpoint and password `redis://:<password@<public-endpoint>`. Save this value. It will be needed later when creating the app in Digital Ocean.
+
+## Environment variables
+The ```APP_ENV``` environment variable is typically set based on the environment in which the application is running.
+Its value corresponds to the specific environment, such as "development", "staging" or "production".
+This variable helps the application identify its current environment and load the corresponding configuration.
+
+For the web application, by setting the environment variable ```APP_ENV```,
+the application can determine the environment in which it is running and download the appropriate configuration file:
+
+| APP_ENV       | File              |
+| ------------- |-------------------|
+| development   | .env.development  |
+| staging       | .env.staging      |
+| production    | .env.production   |
+
+These files should contain specific configuration variables required for each environment.
+
+In contrast, the API utilizes a single `.env` file that houses its environment-specific configuration.
+This file typically contains variables like API keys, secrets, or other sensitive information.
+To ensure security, it's crucial to add the `.env` file to the `.gitignore` file,
+preventing it from being tracked and committed to the repository.
+
+So just specify the environment variables that will contain the values of your secrets.
+For example, if you have a secret named `API_KEY`,
+create an environment variable named `API_KEY` and set the value of the corresponding secret for it.
+
+## Digital Ocean via Pulumi
+
+[Pulumi](https://www.pulumi.com/) is an open-source [Infrastructure as Code (IaC)](https://www.pulumi.com/what-is/what-is-infrastructure-as-code/) platform that allows developers to define and provision cloud infrastructure using familiar programming languages. <br/>
+Instead of using domain-specific languages or YAML templates, Pulumi leverages existing languages like TypeScript, Python, Go, and C#.
+
+Go to the `/deploy` directory at the root of your project and proceed to the next steps:
+
+<Steps>
+    <Step title="Pulumi CLI">
+        Ensure you have [Pulumi CLI](https://www.pulumi.com/docs/get-started/install/) installed. <br/>
+        After installing, verify everything is in working order by running the pulumi CLI:
+        ```shell
+        pulumi version
+        ```
+    </Step>
+    <Step title="Pulumi Login">
+        [Login in pulumi](https://www.pulumi.com/docs/cli/commands/pulumi_login/) for managing your stacks:
+        ```shell
+        pulumi login --local
+        ```
+    </Step>
+    <Step title="DigitalOcean Tokens and Keys">
+        Create your [Personal Access Token](https://docs.digitalocean.com/reference/api/create-personal-access-token/) and [Access Keys](https://docs.digitalocean.com/products/spaces/how-to/manage-access/#access-keys) for DigitalOcean
+    </Step>
+    <Step title="Configuring Tokens and Keys">
+        Add DigitalOcean Personal Access Token and Access Keys to your configuration file: `.zshrc` or `.bashrc`
+
+        First you’ll need to enter the `.zshrc` or `.bashrc` file in editing mode:
+
+        <CodeGroup>
+            ```shell .zshrc
+            vi ~/.zshrc
+            ```
+
+            ```shell .bashrc
+            vi ~/.bashrc
+            ```
+        </CodeGroup>
+
+        Insert the following variables at the end of the configuration file:
+
+        ```shell
+        # DigitalOcean start
+        export DIGITALOCEAN_TOKEN=dop_v1_...
+        export SPACES_ACCESS_KEY_ID=DO...
+        export SPACES_SECRET_ACCESS_KEY=...
+        # DigitalOcean end
+        ```
+
+        To reflect the changes in the bash, either exit and launch the terminal again.
+
+        Or use the command:
+        <CodeGroup>
+            ```shell .zshrc
+            source ~/.zshrc
+            ```
+
+            ```shell .bashrc
+            source ~/.bashrc
+            ```
+        </CodeGroup>
+    </Step>
+    <Step title="GitHub apps">
+        Grant DigitalOcean access to your GitHub repository using [this link](https://cloud.digitalocean.com/apps/github/install).
+    </Step>
+    <Step title="Stack initialization">
+        Initialize your stack using the command:
+        ```shell
+        pulumi stack init organization/{project-name}/{environment}
+        ```
+        Substitute `{project-name}` with the actual name of your project and make sure to update it in `Pulumi.yaml` file. <br/>
+        Replace `{environment}` with the desired environment: `staging` or `production` values are allowed.
+    </Step>
+    <Step title="App environments">
+        Duplicate the `.env.example` file to create a new environment-specific file using the command:
+        <CodeGroup>
+            ```shell staging
+            cp .env.example .env.staging
+            ```
+
+            ```shell production
+            cp .env.example .env.production
+            ```
+        </CodeGroup>
+
+        Populate the new file with the necessary environment variables.
+
+        <Info>
+            Ensure that you set the necessary variables in your web application.
+            Edit the .env files accordingly and remember to push these changes to your remote repository.
+        </Info>
+    </Step>
+    <Step title="Installing dependencies">
+        Install the required dependencies using the command:
+        ```shell
+        npm i
+        ```
+    </Step>
+    <Step title="Resources creating">
+        To create the resources in the initialized stack, execute the command:
+        ```shell
+        pulumi up
+        ```
+    </Step>
+</Steps>
+
+Finally, you will observe the following output:
+
+![Pulumi Preview](/images/do-apps-iac-preview.png)
+
+Review the planned resource creation and proceed with the resource update.
+This process may take a few minutes to complete.
+
+## Cloudflare
+
+Navigate to your Digital Ocean application and open `Settings` tab.
+Navigate to `Domains` row to open domain settings and copy starter domain of application.
+
+![Digital Ocean domains](/images/do-apps-iac-domains.png)
+
+Navigate to [CloudFlare](https://dash.cloudflare.com/) and sign into account.
+
+1. Go to `DNS` tab and create a new record.
+2. Click `Add record`. Select type `CNAME`,  enter domain name (must be the same you entered in digital ocean settings) and paste alias into `target` field.
+Make sure `Proxy status` toggle enabled.
+3. Save changes
+
+![Cloudflare DNS](/images/cloudflare-create-dns.png)
+
+Now go back to digital ocean and submit form. It usually takes about 5 minutes for digital ocean to confirm and start using your new domain.
+Once domain is confirmed, application can be accessed by new address.
+
+
+## GitHub Actions
+
+You can find two GitHub actions in the `.github/workflows` folder, responsible for triggering deployment when you push changes in your repository. If you chose frontend or backend on the initialization step, you'll have one github workflow for the selected application type.
+
+These actions require a [Digital Ocean Personal Access Token](https://docs.digitalocean.com/reference/api/create-personal-access-token/) and application ID.
+Respectively these are `DO_ACCESS_TOKEN` and `DO_API_STAGING_APP_ID`/`DO_WEB_STAGING_APP_ID`/`DO_API_PRODUCTION_APP_ID`/`DO_WEB_PRODUCTION_APP_ID`.
+
+Next, navigate to the **Apps** tab in the left sidebar and open your Digital Ocean application. You can find the id of your application id in the browser address bar.
+
+![Do application id](/images/do-application-id.png)
+
+Now you can add these keys to your GitHub repository's secrets.
+
+Navigate to the GitHub repository page, and open the **Settings** tab and these values. You have to be repository **admin** or **owner** to open this tab.
+
+![Github secrets](/images/github-secrets.png)
+
+Done! Application deployed and can be accessed by provided domain.
+
+![Deployed application](/images/deployed-application.png)
+
+## Logging (optional)
+### Build-in
+
+Digital Ocean has built-in logs in raw format. It will gather all data that your apps will produce.
+In order to view them, follow these steps:
+
+1. Log in to your Digital Ocean account.
+2. Click on the Apps tab in the left-hand navigation menu.
+3. Click on the name of the app you want to view the logs for.
+4. Click on the Runtime Logs tab in the app dashboard.
+5. You will see a list of logs for different components of your app. Click on the component you want to view the logs for.
+6. You can filter the logs by time, severity, and component. Use the drop-down menus provided to select your filter criteria.
+7. You can also search for specific keywords in the logs by using the search bar at the top of the page.
+
+![Runtime built in logs screen](/images/do-runtime-built-in-logs.png)
+
+### Integrations
+
+Currently, Digital Ocean Apps supports only 3 integrations: [PaperTrail](https://marketplace.digitalocean.com/add-ons/papertrail), [Logtail](https://marketplace.digitalocean.com/add-ons/logtail) and [Datadog](https://www.datadoghq.com/). You can find detailed instructions on how to set up these logs at this [link](https://docs.digitalocean.com/products/app-platform/how-to/forward-logs/).
+
+### Example Integration Logtail
+
+To configure Logtail follow these steps:
+1. Create account on Logtail
+2. Open Sources on the left sidebar.
+3. Create new source by clicking "Connect source" button
+
+![Logs Integrations logtail sources](/images/do-logs-logtail-sources.png)
+
+4. Select HTTP source and specify name for this connection
+
+![Logs Integrations Logtail connect](/images/do-logs-logtail-connect-source.png)
+
+5. Copy source token
+
+![Logs Integrations Logtail token](/images/do-logs-logtail-token.png)
+
+6. Open Digital Ocean Apps
+7. Select Settings tab for your application
+
+![Logs Integrations Settings](/images/do-app-logs-settings.png)
+
+8. Select Log Forwarding and then press "Add Destination"
+
+![Logs Forwarding](/images/do-logs-log-forwarding.png)
+
+9. Fill information with token that we retrieved from Logtail
+
+![Logs Create Log Forward](/images/do-create-log-forward.png)
+
+10. That's it! In couple minutes your app will send the latest logs to Logtail
+
+![Logs Logtail Final View](/images/do-logs-logtail-final-view.png)

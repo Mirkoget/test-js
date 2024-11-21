@@ -1,0 +1,266 @@
+.shopHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    height: 60px;
+    background-color: #fff;
+    font-family: 'AwanZaman', Arial, sans-serif;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'AwanZaman', Arial, sans-serif;
+}
+
+.navButtons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    width: 30%;
+    margin-left: 44.58px;
+}
+
+.navItem {
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    font-family: 'AwanZaman', Arial, sans-serif;
+}
+
+.navItem:hover {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.userActions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cart,
+.logout {
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    font-family: 'AwanZaman', Arial, sans-serif;
+}
+
+.cart {
+    color: blue;
+}
+
+.cart span {
+    color: blue;
+}
+
+.logout {
+    color: red;
+}
+
+.cartContainer {
+    display: flex;
+    flex-direction: column;
+    font-family: 'AwanZaman', Arial, sans-serif;
+}
+
+.cartContent {
+    display: flex;
+    gap: 2rem;
+    width: calc(100% - 30px);
+    margin-left: 43px;
+}
+
+.cartMainContent {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: calc(80% - 30px);
+}
+
+.cartHeader {
+    display: flex;
+    gap: 1rem;
+    width: 12%;
+    margin-left: 46px;
+}
+
+.historyButton {
+    background: none;
+    border: none;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    font-weight: bold;
+    opacity: 0.3;
+    font-size: 1.2rem;
+    font-family: 'AwanZaman', Arial, sans-serif;
+    transition: opacity 0.3s, font-size 0.3s;
+}
+
+.cartHeader button.active {
+    opacity: 1;
+}
+
+.cartTable {
+    width: 75%;
+    border-collapse: collapse;
+}
+
+.cartTable td,
+.cartTable th {
+    padding: 10px;
+}
+
+.cartTable th {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.cartItemImage {
+    width: 90px;
+    height: 90px;
+    margin-right: 10px;
+}
+
+.cartTable td:nth-child(1),
+.cartTable th:nth-child(1) {
+    text-align: left;
+    width: 370px;
+}
+
+.cartTable td:nth-child(2),
+.cartTable th:nth-child(2) {
+    width: 80px;
+    text-align: right;
+}
+
+.cartTable td:nth-child(3),
+.cartTable th:nth-child(3) {
+    width: 130px;
+    text-align: center;
+}
+
+.quantityButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #000;
+    padding: 0 10px;
+    font-family: 'AwanZaman', Arial, sans-serif;
+}
+
+.quantityButton:hover {
+    color: #007bff;
+}
+
+.cartTable td:nth-child(4),
+.cartTable th:nth-child(4) {
+    width: 10px;
+    padding: 0;
+    text-align: right;
+}
+
+.removeButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.6);
+    opacity: 0.8;
+    font-family: 'AwanZaman', Arial, sans-serif;
+    font-size: 1.2rem;
+    display: inline-block;
+    white-space: nowrap;
+    margin-left: auto;
+    margin-right: 0;
+    padding: 0;
+}
+
+.summarySection {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    margin-top: 20px;
+    width: 330px;
+    flex-shrink: 0;
+    margin-right: 65px;
+    margin-left: 65px;
+    height: 175px;
+}
+
+.checkoutButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: 'AwanZaman', Arial, sans-serif;
+    margin-top: auto;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.checkoutButton:hover {
+    background-color: #0056b3;
+}
+
+.cartTable tr td {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.cartTable tr {
+    height: 100px;
+}
+
+.summarySection h3 {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 35px;
+    margin-top: 2px;
+}
+
+.summarySection p {
+    margin-top: 35px;
+}
+
+.emptyCart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 0;
+    width: 370px;
+    margin: 0 auto;
+    margin-top: 90px;
+}
+
+.emptyCartText {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 20px;
+}
+
+.emptyCartText span {
+    font-size: 24px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 1);
+}
+
+.emptyCartImage {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 20px;
+}
+
+.goToMarketplaceButton {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

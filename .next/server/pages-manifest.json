@@ -1,0 +1,10 @@
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/components/history": "pages/components/history.js",
+  "/components/shop": "pages/components/shop.js",
+  "/components/yourProducts": "pages/components/yourProducts.js",
+  "/components/shoppingCart": "pages/components/shoppingCart.js",
+  "/components/createProduct": "pages/components/createProduct.js"
+}
